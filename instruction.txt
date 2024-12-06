@@ -1,0 +1,6 @@
+
+Pages
+    Home ( main landing page)
+    Login/Signup
+    Dashboard
+    About

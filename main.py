@@ -3,9 +3,9 @@ import mysql.connector
 
 from streamlit_option_menu import option_menu
 
-import about,account,home,dashboard
+import about,signin,home,dashboard
 st.set_page_config(
-    page_title="Shelfie",
+    page_title="Shelf.e",
     page_icon="📚",
     layout="centered",
     initial_sidebar_state="expanded",
@@ -37,8 +37,8 @@ class MultiApp:
         with st.sidebar:
             #st.title("")
             app = option_menu(
-                menu_title='Shelfie',
-                options=["Home", "Account", "Dashboard", "About"],
+                menu_title='Shelf.e',
+                options=["Home", "SignIn", "Dashboard", "About"],
                 icons=["🏠", "👤","📚", "📚"],
                 menu_icon="📚",
                 default_index=1,
@@ -51,8 +51,8 @@ class MultiApp:
             
         if app == "Home":
             home.app()
-        if app == "Account":
-            account.app()
+        if app == "SignIn":
+            signin.app()
         if app == "Dashboard":
             dashboard.app()
         if app == "About":

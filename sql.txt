@@ -18,6 +18,7 @@ CREATE TABLE books (
     genre VARCHAR(50),
     publication_year INT,
     description TEXT,
+    cover_image_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,18 +36,16 @@ CREATE TABLE user_books (
     FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
 );
 
+-- Insert sample books with cover image URLs from Open Library
+INSERT INTO books (title, author, genre, publication_year, description, cover_image_url) VALUES
+('1984', 'George Orwell', 'Dystopian', 1949, 'A dystopian novel set in a totalitarian regime under Big Brother.', 'https://covers.openlibrary.org/b/isbn/9780451524935-M.jpg'),
+('To Kill a Mockingbird', 'Harper Lee', 'Classic', 1960, 'A story of racial injustice and moral growth in the American South.', 'https://covers.openlibrary.org/b/isbn/9780061120084-M.jpg'),
+('The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 1925, 'A critique of the American Dream through the life of Jay Gatsby.', 'https://covers.openlibrary.org/b/isbn/9780743273565-M.jpg'),
+('The Catcher in the Rye', 'J.D. Salinger', 'Fiction', 1951, 'The journey of a teenager, Holden Caulfield, through New York.', 'https://covers.openlibrary.org/b/isbn/9780316769488-M.jpg'),
+('The Hobbit', 'J.R.R. Tolkien', 'Fantasy', 1937, 'The adventures of Bilbo Baggins in Middle-earth.', 'https://covers.openlibrary.org/b/isbn/9780547928227-M.jpg'),
+('Pride and Prejudice', 'Jane Austen', 'Romance', 1813, 'A romantic story of Elizabeth Bennet and Mr. Darcy.', 'https://covers.openlibrary.org/b/isbn/9780141439518-M.jpg'),
+('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', 'Fantasy', 1997, 'Harry Potter discovers he is a wizard and attends Hogwarts School.', 'https://covers.openlibrary.org/b/isbn/9780590353427-M.jpg'),
+('The Alchemist', 'Paulo Coelho', 'Adventure', 1988, 'A journey of self-discovery following Santiago, an Andalusian shepherd.', 'https://covers.openlibrary.org/b/isbn/9780061122415-M.jpg'),
+('The Road', 'Cormac McCarthy', 'Post-apocalyptic', 2006, 'A father and son journey through a barren, post-apocalyptic world.', 'https://covers.openlibrary.org/b/isbn/9780307387899-M.jpg'),
+('Sapiens: A Brief History of Humankind', 'Yuval Noah Harari', 'Non-fiction', 2011, 'A comprehensive history of human evolution and society.', 'https://covers.openlibrary.org/b/isbn/9780062316097-M.jpg');
 
-
-
--- Insert sample books into the books table
-INSERT INTO books (title, author, genre, publication_year, description) VALUES
-('1984', 'George Orwell', 'Dystopian', 1949, 'A dystopian novel set in a totalitarian regime under Big Brother.'),
-('To Kill a Mockingbird', 'Harper Lee', 'Classic', 1960, 'A story of racial injustice and moral growth in the American South.'),
-('The Great Gatsby', 'F. Scott Fitzgerald', 'Classic', 1925, 'A critique of the American Dream through the life of Jay Gatsby.'),
-('The Catcher in the Rye', 'J.D. Salinger', 'Fiction', 1951, 'The journey of a teenager, Holden Caulfield, through New York.'),
-('The Hobbit', 'J.R.R. Tolkien', 'Fantasy', 1937, 'The adventures of Bilbo Baggins in Middle-earth.'),
-('Pride and Prejudice', 'Jane Austen', 'Romance', 1813, 'A romantic story of Elizabeth Bennet and Mr. Darcy.'),
-('Harry Potter and the Sorcerer\'s Stone', 'J.K. Rowling', 'Fantasy', 1997, 'Harry Potter discovers he is a wizard and attends Hogwarts School.'),
-('The Alchemist', 'Paulo Coelho', 'Adventure', 1988, 'A journey of self-discovery following Santiago, an Andalusian shepherd.'),
-('The Road', 'Cormac McCarthy', 'Post-apocalyptic', 2006, 'A father and son journey through a barren, post-apocalyptic world.'),
-('Sapiens: A Brief History of Humankind', 'Yuval Noah Harari', 'Non-fiction', 2011, 'A comprehensive history of human evolution and society.');
