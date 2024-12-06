@@ -110,6 +110,7 @@ def app():
             books = search_books(update_query, "Title")
             if books:
                 for book in books:
+                    st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
                     st.write(f"Title: {book[1]}, Author: {book[2]}")
                     if st.button(f"Select '{book[1]}' for update", key=f"select_{book[0]}"):
                         st.session_state.selected_book = book
