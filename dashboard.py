@@ -152,9 +152,25 @@ def app():
         search_by = st.selectbox("Search by", ["Title", "Author", "Year", "Genre"])
         if st.button("Search"):
             books = search_books(search_query, search_by)
+            # if books:
+            #     st.write("Search Results:")
+            #     st.table(pd.DataFrame(books, columns=["ID", "Title", "Author", "Genre", "Publication Year", "Description","Cover", "Date Added"]))
+            # else:
+            #     st.write("No books found.")
             if books:
                 st.write("Search Results:")
-                st.table(pd.DataFrame(books, columns=["ID", "Title", "Author", "Genre", "Publication Year", "Description","Date Added"]))
+                for i in range(0, len(books), 3):
+                    cols = st.columns(3)
+                    for j in range(3):
+                        if i + j < len(books):
+                            book = books[i + j]
+                            with cols[j]:
+                                st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
+                                st.write(f"**Title:** {book[1]}")
+                                st.write(f"**Author:** {book[2]}")
+                                st.write(f"**Genre:** {book[3]}")
+                                st.write(f"**Publication Year:** {book[4]}")
+                                st.write(f"**Description:** {book[5]}")
             else:
                 st.write("No books found.")
 
