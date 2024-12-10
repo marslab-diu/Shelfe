@@ -79,7 +79,12 @@ def app():
                 cover = cursor.fetchone()
                 if cover:
                     st.image(cover['cover_image_url'], caption=record['book_name'], width=100)
-                st.write(f"**Status:** {record['status']}")
+                status = st.selectbox(
+                    "Status", 
+                    options=["reading", "completed", "wishlist"], 
+                    index=["reading", "completed", "wishlist"].index(record['status']),
+                    key=f"status_{record['user_book_id']}"
+                )
                 st.write(f"**Start Date:** {record['start_date']}")
                 st.write(f"**End Date:** {record['end_date']}")
                 st.write(f"**Rating:** {record['rating']}")
