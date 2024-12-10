@@ -25,10 +25,11 @@ def app():
     if user_details:
         st.write("User ID: ", user_details['user_id'])
         st.write("Account created at: ",user_details['created_at'])
+        st.session_state.user_id = user_details['user_id']
     else:
         st.write("User not found.")
     
-    st.session_state.user_id = user_details['user_id']
+    
 
     # Fetch and display user statistics
     cursor.execute("""
