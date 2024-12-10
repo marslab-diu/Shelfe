@@ -40,8 +40,6 @@ def app():
         WHERE user_id = %s;
     """, (st.session_state.user_id,))
     stats = cursor.fetchone()
-    cursor.close()
-    connection.close()
 
     if stats:
         st.subheader("Your Book Statistics")
@@ -69,13 +67,17 @@ def app():
         WHERE ub.user_id = %s;
     """, (st.session_state.user_id,))
     records = cursor.fetchall()
-    cursor.close()
-    connection.close()
+
 
     if records:
         st.subheader("Your Books")
         for record in records:
             with st.expander(f"Book: {record['book_name']}"):
+                # Fetch and display book cover
+                cursor.execute("SELECT cover_image_url FROM books WHERE book_id = %s", (record['book_id'],))
+                cover = cursor.fetchone()
+                if cover and cover['cover_image_url']:
+                    st.image(cover['cover_image_url'], caption=record['book_name'], width=100)
                 st.write(f"**Status:** {record['status']}")
                 st.write(f"**Start Date:** {record['start_date']}")
                 st.write(f"**End Date:** {record['end_date']}")
@@ -106,7 +108,7 @@ def app():
                     cursor.close()
                     connection.close()
                     st.success(f"Record for {record['book_name']} updated successfully!")
-                    st.experimental_rerun()
+                    # st.experimental_rerun()
     else:
         st.write("No books found in your library.")
     
