@@ -77,7 +77,7 @@ def app():
                 # Fetch and display book cover
                 cursor.execute("SELECT cover_image_url FROM books WHERE book_id = %s", (record['book_id'],))
                 cover = cursor.fetchone()
-                if cover and cover['cover_image_url']:
+                if cover:
                     st.image(cover['cover_image_url'], caption=record['book_name'], width=100)
                 st.write(f"**Status:** {record['status']}")
                 st.write(f"**Start Date:** {record['start_date']}")
@@ -106,8 +106,8 @@ def app():
                         WHERE user_book_id = %s;
                     """, (end_date, rating, notes, record['user_book_id']))
                     connection.commit()
-                    cursor.close()
-                    connection.close()
+                    # cursor.close()
+                    # connection.close()
                     st.success(f"Record for {record['book_name']} updated successfully!")
                     # st.experimental_rerun()
     else:

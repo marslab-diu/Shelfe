@@ -36,6 +36,16 @@ CREATE TABLE user_books (
     FOREIGN KEY (book_id) REFERENCES books(book_id) ON DELETE CASCADE
 );
 
+-- Table for managing book requests
+CREATE TABLE book_requests (
+    request_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique identifier for each request
+    user_id INT NOT NULL, -- The user who made the request
+    book_name VARCHAR(255) NOT NULL, -- Name of the requested book
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date and time when the request was made
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE -- Link to the users table
+);
+
+
 -- Insert sample books with cover image URLs from Open Library
 INSERT INTO books (title, author, genre, publication_year, description, cover_image_url) VALUES
 ('1984', 'George Orwell', 'Dystopian', 1949, 'A dystopian novel set in a totalitarian regime under Big Brother.', 'https://covers.openlibrary.org/b/isbn/9780451524935-M.jpg'),
