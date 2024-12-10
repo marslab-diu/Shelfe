@@ -17,15 +17,33 @@ def connect_to_db():
 
 
 def app():
+    if 'admin' not in st.session_state:
+        st.session_state.admin = False
+    if 'add_book' not in st.session_state:
+        st.session_state.add_book = False
+    if 'update_book' not in st.session_state:
+        st.session_state.update_book = False
+        st.session_state.search_book = False
+    if 'remove_book' not in st.session_state:
+        st.session_state.remove_book = False
+    if 'search_book' not in st.session_state:
+        st.session_state.search_book = False
 
-    st.title("Dashboard")
 
-    if 'username' not in st.session_state:
-        st.session_state.username = ''
+    st.title("Admin Panel")
 
-    st.write(f"Welcome, {st.session_state.username}")
 
-    
+    if st.session_state.admin == False:
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        if username == "admin" and password == "admin":
+            st.session_state.admin = True
+            st.write("Logged in as Admin")
+        else:
+            st.warning("Please enter the correct username and password.")
+            st.stop()
+
+
     def search_books(query, search_by):
         connection = connect_to_db()
         try:
@@ -71,135 +89,139 @@ def app():
         finally:
             connection.close()
 
-    if 'add_book' not in st.session_state:
-        st.session_state.add_book = False
-    if 'update_book' not in st.session_state:
-        st.session_state.update_book = False
-        st.session_state.search_book = False
-    if 'remove_book' not in st.session_state:
-        st.session_state.remove_book = False
-    if 'search_book' not in st.session_state:
-        st.session_state.search_book = False
 
-    if st.button("Add Book"):
-        st.session_state.add_book = True
-        st.session_state.update_book = False
-        st.session_state.remove_book = False
-        st.session_state.search_book = False
+    if st.session_state.admin:
+        write = st.write("Welcome Admin")
+        if st.button("Logout"):
+                st.session_state.admin = False
+                st.session_state.add_book = False
+                st.session_state.update_book = False
+                st.session_state.remove_book = False
+                st.session_state.search_book = False
+                st.warning("Logged out successfully!")
+                st.stop()
+        if st.button("Add Book"):
+            st.session_state.add_book = True
+            st.session_state.update_book = False
+            st.session_state.remove_book = False
+            st.session_state.search_book = False
 
-    if st.session_state.add_book:
-        title = st.text_input("Enter book title:")
-        author = st.text_input("Enter book author:")
-        genre = st.text_input("Enter book genre:")
-        publication_year = st.text_input("Enter book publication year:")
-        description = st.text_area("Enter book description:")
-        cover = st.text_input("Enter cover image URL:")
-        if st.button(f"Submit '{title}'"):
-            add_book(title, author, genre, publication_year, description,cover)
-            st.success("Book added successfully!")
+        if st.session_state.add_book:
+            title = st.text_input("Enter book title:")
+            author = st.text_input("Enter book author:")
+            genre = st.text_input("Enter book genre:")
+            publication_year = st.text_input("Enter book publication year:")
+            description = st.text_area("Enter book description:")
+            cover = st.text_input("Enter cover image URL:")
+            if st.button(f"Submit '{title}'"):
+                add_book(title, author, genre, publication_year, description,cover)
+                st.success("Book added successfully!")
+                st.session_state.add_book = False
+        
+
+        if st.button("Search Book"):
+            st.session_state.search_book = True
             st.session_state.add_book = False
+            # st.session_state.update_book = False
+            # st.session_state.remove_book = False
 
-    if st.button("Update Book"):
-        st.session_state.update_book = True
-        st.session_state.add_book = False
-        st.session_state.remove_book = False
-        st.session_state.search_book = False
+        if st.session_state.search_book:
+            search_by = st.selectbox("Search by", ["Title", "Author", "Year", "Genre"])
+            search_query = st.text_input("Enter search query:")
+            if st.button("Search"):
+                books = search_books(search_query, search_by)
+                if books:
+                    st.write("Search Results:")
+                    for i in range(0, len(books), 3):
+                        cols = st.columns(3)
+                        for j in range(3):
+                            if i + j < len(books):
+                                book = books[i + j]
+                                with cols[j]:
+                                    st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
+                                    st.write(f"**Title:** {book[1]}")
+                                    st.write(f"**Author:** {book[2]}")
+                                    st.write(f"**Genre:** {book[3]}")
+                                    st.write(f"**Publication Year:** {book[4]}")
+                                    st.write(f"**Description:** {book[5]}")
+                else:
+                    st.write("No books found.")
 
-    if st.session_state.update_book:
-        update_query = st.text_input("Search for a book to update:")
-        if update_query:
-            books = search_books(update_query, "Title")
-            if books:
-                for book in books:
-                    st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
-                    st.write(f"Title: {book[1]}, Author: {book[2]}")
-                    if st.button(f"Select '{book[1]}' for update", key=f"select_{book[0]}"):
-                        st.session_state.selected_book = book
+        if st.button("Update Book"):
+            st.session_state.update_book = True
+            st.session_state.add_book = False
+            st.session_state.remove_book = False
+            st.session_state.search_book = False
 
-            # Check if a book is selected
-            if "selected_book" in st.session_state:
-                selected_book = st.session_state.selected_book
-                st.write(f"**Updating Book:** {selected_book[1]}")
+        if st.session_state.update_book:
+            update_query = st.text_input("Search for a book title to update:")
+            if update_query:
+                books = search_books(update_query, "Title")
+                if books:
+                    st.write("Search Results:")
+                    for i in range(0, len(books), 3):
+                        cols = st.columns(3)
+                        for j in range(3):
+                            if i + j < len(books):
+                                book = books[i + j]
+                                with cols[j]:
+                                    st.image(book[6], width=100)  # book[6] is the URL or path to the cover image
+                                    st.write(f"Title: {book[1]}")
+                                    if st.button(f"Click to update", key=f"select_{book[0]}"):
+                                        st.session_state.selected_book = book
 
-                # Input fields for updating the book
-                new_title = st.text_input("Enter new title:", value=selected_book[1], key="new_title")
-                new_author = st.text_input("Enter new author:", value=selected_book[2], key="new_author")
-                new_genre = st.text_input("Enter new genre:", value=selected_book[3], key="new_genre")
-                new_publication_year = st.text_input("Enter new publication year:", value=selected_book[4], key="new_publication_year")
-                new_description = st.text_area("Enter new description:", value=selected_book[5], key="new_description")
+                # Check if a book is selected
+                if "selected_book" in st.session_state:
+                    selected_book = st.session_state.selected_book
+                    st.write(f"**Updating Book:** {selected_book[1]}")
 
-                # Submit button for updating the book
-                if st.button("Submit Update"):
-                    update_book(
-                        selected_book[0],
-                        new_title,
-                        new_author,
-                        new_genre,
-                        new_publication_year,
-                        new_description,
-                    )
-                    st.success(f"Book '{selected_book[1]}' updated successfully!")
+                    # Input fields for updating the book
+                    new_title = st.text_input("Enter new title:", value=selected_book[1], key="new_title")
+                    new_author = st.text_input("Enter new author:", value=selected_book[2], key="new_author")
+                    new_genre = st.text_input("Enter new genre:", value=selected_book[3], key="new_genre")
+                    new_publication_year = st.text_input("Enter new publication year:", value=selected_book[4], key="new_publication_year")
+                    new_description = st.text_area("Enter new description:", value=selected_book[5], key="new_description")
 
-                    # Clear session state after updating
-                    del st.session_state["selected_book"]
-                    st.session_state.update_book = False
-                    # st.experimental_rerun()
-        #         else:
-        #             st.info("Please select a book to update.")
-        #     else:
-        #         st.info("Enter a search query to find books.")
-        # else:
-        #     # st.info("Click 'Update Book' to start updating a book.")
+                    # Submit button for updating the book
+                    if st.button("Submit Update"):
+                        update_book(
+                            selected_book[0],
+                            new_title,
+                            new_author,
+                            new_genre,
+                            new_publication_year,
+                            new_description,
+                        )
+                        st.success(f"Book '{selected_book[1]}' updated successfully!")
+
+                        # Clear session state after updating
+                        del st.session_state["selected_book"]
+                        st.session_state.update_book = False
 
 
-    if st.button("Remove Book"):
-        st.session_state.remove_book = True
-        st.session_state.add_book = False
-        st.session_state.update_book = False
-        st.session_state.search_book = False
 
-    if st.session_state.remove_book:
-        remove_query = st.text_input("Search for a book title to remove:")
-        if remove_query:
-            books = search_books(remove_query, "Title")
-            if books:
-                for book in books:
-                    st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
-                    st.write(f"Title: {book[1]}, Author: {book[2]}")
-                    if st.button(f"Select '{book[1]}' to remove", key=f"select_{book[0]}"):
-                        remove_book(book[0])
-                        st.success("Book removed successfully!")
-                        st.session_state.remove_book = False
-            else:
-                st.write("No books found.")
+        if st.button("Remove Book"):
+            st.session_state.remove_book = True
+            st.session_state.add_book = False
+            st.session_state.update_book = False
+            st.session_state.search_book = False
 
-    if st.button("Search Book"):
-        st.session_state.search_book = True
-        st.session_state.add_book = False
-        # st.session_state.update_book = False
-        # st.session_state.remove_book = False
+        if st.session_state.remove_book:
+            remove_query = st.text_input("Search for a book title to remove:")
+            if remove_query:
+                books = search_books(remove_query, "Title")
+                if books:
+                    for book in books:
+                        st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
+                        st.write(f"Title: {book[1]}, Author: {book[2]}")
+                        if st.button(f"Select '{book[1]}' to remove", key=f"select_{book[0]}"):
+                            remove_book(book[0])
+                            st.success("Book removed successfully!")
+                            st.session_state.remove_book = False
+                else:
+                    st.write("No books found.")
 
-    if st.session_state.search_book:
-        search_query = st.text_input("Enter search query:")
-        search_by = st.selectbox("Search by", ["Title", "Author", "Year", "Genre"])
-        if st.button("Search"):
-            books = search_books(search_query, search_by)
-            if books:
-                st.write("Search Results:")
-                for i in range(0, len(books), 3):
-                    cols = st.columns(3)
-                    for j in range(3):
-                        if i + j < len(books):
-                            book = books[i + j]
-                            with cols[j]:
-                                st.image(book[6], width=100)  # Assuming book[6] is the URL or path to the cover image
-                                st.write(f"**Title:** {book[1]}")
-                                st.write(f"**Author:** {book[2]}")
-                                st.write(f"**Genre:** {book[3]}")
-                                st.write(f"**Publication Year:** {book[4]}")
-                                st.write(f"**Description:** {book[5]}")
-            else:
-                st.write("No books found.")
+    
 
 
 
