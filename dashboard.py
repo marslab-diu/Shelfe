@@ -14,7 +14,7 @@ def connect_to_db():
 
 
 def app():
-    st.title("Dashboard")
+    st.title("Dashboard 📈")
     st.write("Hello ", st.session_state.username)
 
     connection = connect_to_db()
@@ -107,9 +107,9 @@ def app():
                     cursor = connection.cursor()
                     cursor.execute("""
                         UPDATE user_books
-                        SET end_date = %s, rating = %s, notes = %s
+                        SET end_date = %s, rating = %s, notes = %s, status = %s
                         WHERE user_book_id = %s;
-                    """, (end_date, rating, notes, record['user_book_id']))
+                    """, (end_date, rating, notes,status, record['user_book_id']))
                     connection.commit()
                     # cursor.close()
                     # connection.close()

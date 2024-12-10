@@ -32,7 +32,7 @@ def app():
         st.session_state.requested_book = False
 
 
-    st.title("Admin Panel")
+    st.title("Admin Panel 👤")
 
 
     if st.session_state.admin == False:

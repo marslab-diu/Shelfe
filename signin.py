@@ -12,7 +12,7 @@ def connect_to_db():
     return connection
 
 def app():
-    st.title("Account 👤")
+    st.title("Account Signin or Signup ⚡")
 
     if 'user_id' not in st.session_state:
         st.session_state.user_id = ''
@@ -30,7 +30,7 @@ def app():
             mycursor.execute("""SELECT username FROM users WHERE username = %s AND password = %s""", (username,password))
             result = mycursor.fetchone()
             if result:
-                st.success(f"Logged in successfully! Welcome, {result[0]}")
+                st.success(f"Signed in successfully! Welcome, {result[0]}")
                 st.session_state.username = username
                 st.session_state.password = password
                 st.session_state.name = result[0]
@@ -50,7 +50,7 @@ def app():
             mycursor.execute("""INSERT INTO users (username, password) VALUES (%s, %s)""", (username, password))
             connection.commit()
             st.success("Account created successfully")
-            st.write("You can now login to your account")
+            st.write("You can now signin to your account")
             st.balloons()
         except:
             st.warning('Error in creating account')
@@ -73,7 +73,7 @@ def app():
 
     # if user is not logged in then the options will show to login or signup
     if not st.session_state.signed_out:
-        choice = st.selectbox('Login/Signup', ['Login', 'Signup'])
+        choice = st.selectbox('Signin/Signup', ['Signin', 'Signup'])
         username = st.text_input("Username")
         password = st.text_input("Password")
 
@@ -90,7 +90,7 @@ def app():
                     create_account(username, password)
         # that is log in
         else:
-            if st.button("Login"):
+            if st.button("Signin"):
                 login(username, password)
             # st.button('Login',on_click=login(username, password))
             

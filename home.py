@@ -28,6 +28,7 @@ def app():
 
 
     st.image(hero, use_container_width=True)
+    st.markdown('#')
     st.image(all_books, use_container_width=True)
     # st.text(st.session_state.user_id)
 
@@ -42,6 +43,7 @@ def app():
     search_query = st.text_input("Search for a book by title:")
     genre_filter = st.selectbox("Filter by genre:", ["All", "Fiction","Non-Fiction","Science Fiction","Fantasy","Mystery","Romance","Thriller","Biography","Historical Fiction", "Adventure"])
     author_filter = st.text_input("Filter by author:")
+    st.divider()
 
     # Query to fetch books based on filters
     query = "SELECT * FROM books WHERE 1=1"
@@ -98,6 +100,8 @@ def app():
                         except mysql.connector.IntegrityError as e:
                             st.error(f"An error occurred: {e}")
 
+    st.divider()
+    st.markdown('##')
     st.image(request, use_container_width=True)
     # st.markdown("### Request a Book")
     requested_book = st.text_input("Enter the name of the book you want to request:")
@@ -120,9 +124,11 @@ def app():
 
     cursor.close()
     connection.close()
-
+    st.divider()
+    st.markdown('#')
 
     st.image(features, use_container_width=True)
+    st.divider()
     st.image(faq, use_container_width=True)
     st.image(footer, use_container_width=True)
 
