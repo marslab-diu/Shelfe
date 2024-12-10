@@ -29,11 +29,13 @@ def app():
 
     st.image(hero, use_container_width=True)
     st.image(all_books, use_container_width=True)
+    # st.text(st.session_state.user_id)
 
 
     # Database connection
     connection = connect_to_db()
     cursor = connection.cursor(dictionary=True)
+    
 
     # Add filtering and searching options
     st.markdown("### Explore All Books")
@@ -67,7 +69,17 @@ def app():
 
     for index, book in enumerate(books):
         with cols[index % 2]:
-            st.image(book['cover_image_url'], width=100, caption=book['title'])
+               # Wrap image and caption in a center-aligned div
+            st.markdown(
+                f"""
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img src="{book['cover_image_url']}" style="width: 120px; height: 180px; object-fit: cover; margin-bottom: 10px;" alt="Book Cover">
+                <div style="font-size: 14px; font-weight: bold; margin-bottom: 10px;">{book['title']}</div>
+            </div>
+            """,
+                unsafe_allow_html=True,
+            )
+            # st.image(book['cover_image_url'], width=100, caption=book['title'])
             col1, col2 = st.columns(2)
             with col1:
                 if st.button(f"View Details: {book['book_id']}", key=f"details_{book['book_id']}"):
@@ -86,11 +98,30 @@ def app():
                         except mysql.connector.IntegrityError as e:
                             st.error(f"An error occurred: {e}")
 
+    st.image(request, use_container_width=True)
+    # st.markdown("### Request a Book")
+    requested_book = st.text_input("Enter the name of the book you want to request:")
+
+    if st.button("Submit Request"):
+        if not user_signed_in:
+            st.toast('Please Sign in to request a book', icon='❗')
+        elif requested_book:
+            try:
+                cursor.execute(
+                    "INSERT INTO book_requests (user_id, book_name) VALUES (%s, %s)",
+                    (st.session_state.user_id, requested_book)
+                )
+                connection.commit()
+                st.success("Your request has been submitted successfully!")
+            except mysql.connector.Error as e:
+                st.error(f"An error occurred: {e}")
+        else:
+            st.error("Please enter a book name.")
+
     cursor.close()
     connection.close()
 
 
-    st.image(request, use_container_width=True)
     st.image(features, use_container_width=True)
     st.image(faq, use_container_width=True)
     st.image(footer, use_container_width=True)

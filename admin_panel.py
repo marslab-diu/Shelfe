@@ -28,6 +28,8 @@ def app():
         st.session_state.remove_book = False
     if 'search_book' not in st.session_state:
         st.session_state.search_book = False
+    if 'requested_book' not in st.session_state:
+        st.session_state.requested_book = False
 
 
     st.title("Admin Panel")
@@ -86,6 +88,17 @@ def app():
             mycursor = connection.cursor()
             mycursor.execute("DELETE FROM books WHERE book_id = %s", (book_id,))
             connection.commit()
+        finally:
+            connection.close()
+    
+    def requested_book():
+        connection = connect_to_db()
+        try:
+            mycursor = connection.cursor()
+            mycursor.execute("SELECT * FROM book_requests")
+            result = mycursor.fetchall()
+            connection.close()
+            return result
         finally:
             connection.close()
 
@@ -220,6 +233,21 @@ def app():
                             st.session_state.remove_book = False
                 else:
                     st.write("No books found.")
+
+        if st.button("Requested Books"):
+            st.session_state.requested_book = True
+            st.session_state.add_book = False
+            st.session_state.update_book = False
+            st.session_state.remove_book = False
+            st.session_state.search_book = False
+        
+        if st.session_state.requested_book:
+            requested_books = requested_book()
+            if requested_books:
+                df = pd.DataFrame(requested_books, columns=["Request ID", "User ID", "Book Title", "Request Date"])
+                st.table(df.set_index("Request ID"))
+            else:
+                st.write("No requested books found.")
 
     
 

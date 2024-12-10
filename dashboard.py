@@ -15,7 +15,7 @@ def connect_to_db():
 
 def app():
     st.title("Dashboard")
-    st.write("Hello " + st.session_state.username)
+    st.write("Hello ", st.session_state.username)
 
     connection = connect_to_db()
     cursor = connection.cursor(dictionary=True)

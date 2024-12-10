@@ -96,5 +96,16 @@ def app():
             
     if st.session_state.sign_out:
         # st.text('User ID ' + st.session_state.user_id)
-        st.text('Username: ' + st.session_state.username)
+        connection = connect_to_db()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (st.session_state.username,))
+        user_details = cursor.fetchone()
+        if user_details:
+            st.write("User ID: ", user_details['user_id'])
+            st.session_state.user_id = user_details['user_id']
+            st.write('Username: ', st.session_state.username)
+        
         st.button('Sign out', on_click=sign_out)
+        
+        
+            
