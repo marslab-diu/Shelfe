@@ -41,7 +41,7 @@ class MultiApp:
                 options=["Home", "SignIn","Dashboard","Admin Panel", "About"],
                 icons=["house", "person", "bar-chart", "tools", "info-circle"],
                 menu_icon="book",  # Menu icon
-                default_index=1,
+                default_index=0,
                 styles={
                     "container": {"padding": "5!important","background-color":'black'},
                     "icon": {"color": "white", "font-size": "23px"}, 
