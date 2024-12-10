@@ -44,11 +44,11 @@ def app():
         finally:
             connection.close()
 
-    def add_book(title, author, genre, publication_year, description):
+    def add_book(title, author, genre, publication_year, description,cover):
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("INSERT INTO books (title, author, genre, publication_year, description) VALUES (%s, %s,%s,%s,%s)", (title, author, genre, publication_year, description))
+            mycursor.execute("INSERT INTO books (title, author, genre, publication_year, description,cover_image_url) VALUES (%s, %s,%s,%s,%s)", (title, author, genre, publication_year, description,cover))
             connection.commit()
         finally:
             connection.close()
@@ -93,8 +93,9 @@ def app():
         genre = st.text_input("Enter book genre:")
         publication_year = st.text_input("Enter book publication year:")
         description = st.text_area("Enter book description:")
-        if st.button(f"Submit {book[0]}"):
-            add_book(title, author, genre, publication_year, description)
+        cover = st.text_input("Enter cover image URL:")
+        if st.button(f"Submit '{title}'"):
+            add_book(title, author, genre, publication_year, description,cover)
             st.success("Book added successfully!")
             st.session_state.add_book = False
 

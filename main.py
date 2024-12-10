@@ -3,7 +3,7 @@ import mysql.connector
 
 from streamlit_option_menu import option_menu
 
-import about,signin,home,dashboard
+import about,signin,home,admin_panel
 st.set_page_config(
     page_title="Shelf.e",
     page_icon="📚",
@@ -38,7 +38,7 @@ class MultiApp:
             #st.title("")
             app = option_menu(
                 menu_title='Shelf.e',
-                options=["Home", "SignIn", "Dashboard", "About"],
+                options=["Home", "SignIn", "Admin Panel", "About"],
                 icons=["🏠", "👤","📚", "📚"],
                 menu_icon="📚",
                 default_index=1,
@@ -53,8 +53,8 @@ class MultiApp:
             home.app()
         if app == "SignIn":
             signin.app()
-        if app == "Dashboard":
-            dashboard.app()
+        if app == "Admin Panel":
+            admin_panel.app()
         if app == "About":
             about.app()
     
