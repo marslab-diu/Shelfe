@@ -68,7 +68,7 @@ def app():
         connection = connect_to_db()
         try:
             mycursor = connection.cursor()
-            mycursor.execute("INSERT INTO books (title, author, genre, publication_year, description,cover_image_url) VALUES (%s, %s,%s,%s,%s)", (title, author, genre, publication_year, description,cover))
+            mycursor.execute("INSERT INTO books (title, author, genre, publication_year, description,cover_image_url) VALUES (%s, %s,%s,%s,%s.%sd)", (title, author, genre, publication_year, description,cover))
             connection.commit()
         finally:
             connection.close()

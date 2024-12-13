@@ -12,16 +12,6 @@ st.set_page_config(
 )
 
 
-# connection = mysql.connector.connect(
-#                 host="localhost",
-#                 user="root",
-#                 password="",
-#                 database="noticedb"
-#             )
-
-# mycursor = connection.cursor()
-# st.warning("Connected to the database successfully!")
-
 
 class MultiApp:
 

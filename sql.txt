@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE shelfie;
-USE shelfie;
+CREATE DATABASE shelfiedb;
+USE shelfiedb;
 
 -- Table for storing user credentials
 CREATE TABLE users (

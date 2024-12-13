@@ -77,7 +77,7 @@ def app():
                 # Fetch and display book cover
                 cursor.execute("SELECT cover_image_url FROM books WHERE book_id = %s", (record['book_id'],))
                 cover = cursor.fetchone()
-                if cover:
+                if cover and 'cover_image_url' in cover:
                     st.image(cover['cover_image_url'], caption=record['book_name'], width=100)
                 status = st.selectbox(
                     "Status", 
